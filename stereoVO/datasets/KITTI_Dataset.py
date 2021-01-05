@@ -3,8 +3,8 @@
 __all__ = ['CameraParameters', 'KittiDataset']
 
 # Cell
-
 import os
+import cv2
 import glob
 import numpy as np
 
