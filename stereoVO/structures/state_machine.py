@@ -45,6 +45,18 @@ class VO_StateMachine():
         Location_TransVec = None
         Orientation_RotMat = None
 
+    def __setattr__(self, name, value):
+        if name in self.__dict__:
+            if isinstance(self.__dict__[name], StateBolts) and isinstance(value, tuple):
+                left_property = value[0]
+                right_propery = value[1]
+                self.__dict__[name].left = left_property
+                self.__dict__[name].right = right_propery
+            else:
+                self.__dict__[name] = value
+        else:
+            self.__dict__[name] = value
+
     def none_checks(self):
         """
         Call the function before moving on to the next state and assigning (prevState<-currState)

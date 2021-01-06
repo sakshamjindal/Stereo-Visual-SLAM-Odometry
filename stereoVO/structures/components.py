@@ -6,9 +6,10 @@ Date : January 5, 2020
 __all__ = ['StateBolts', ]
 
 class StateBolts(object):
-    
+
     """
-    Acts as a state-storehouse which stores the left and right property of each
+    Implementation of state-storehouse (data structure) which stores the left and right property 
+    of properties of the VO State (VO_StateMachine) at one time instance
     """
 
     def __init__(self):
