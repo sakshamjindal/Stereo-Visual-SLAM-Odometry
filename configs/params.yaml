@@ -34,5 +34,5 @@ geometry:
         enable: False
 debug:
     plotting :
-        features: True
-        featureMatches : True
+        features: False
+        featureMatches : False
