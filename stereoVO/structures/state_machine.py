@@ -2,13 +2,14 @@ from .components import StateBolts
 
 __all__ = ['VO_StateMachine']
 
+
 class VO_StateMachine():
-    
+
     """
-    The VO_state acts as a state-machine which stores the frames, descriptors, tracked features
-    and matched features.  
+    The VO_state acts as a state-machine which stores the
+    frames, descriptors, tracked features and matched features
     """
-    
+
     def __init__(self, state_num=None, params=None):
     
         """
@@ -42,8 +43,8 @@ class VO_StateMachine():
         self.P3P_pts3D = None
         
         # manage 6DOF pose in the current state
-        Location_TransVec = None
-        Orientation_RotMat = None
+        # Location_TransVec = None
+        # Orientation_RotMat = None
 
     def __setattr__(self, name, value):
         if name in self.__dict__:
@@ -56,7 +57,7 @@ class VO_StateMachine():
                 self.__dict__[name] = value
         else:
             self.__dict__[name] = value
-
+    
     def none_checks(self):
         """
         Call the function before moving on to the next state and assigning (prevState<-currState)
@@ -64,5 +65,3 @@ class VO_StateMachine():
         if True:
             raise ValueError(" ... ")
             
-    def update_state_components(self):
-        pass
