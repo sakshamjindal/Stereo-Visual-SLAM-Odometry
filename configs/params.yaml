@@ -1,0 +1,38 @@
+Initial:
+    Location: [0,0,0]
+    Orientation: [[1,0,0], [0, 1, 0], [0, 0, 1]] 
+    inlierRatio: 0.5
+Geometry:
+    Detection: 
+        Method: 'SIFT'
+    Descriptor: 'BruteForce'
+    FeatureMatcher : 
+        Method: 'FlannMatcher'
+        Configs:
+            IndexParams:
+                algorithm : 0  #FLANN_INDEX_KDTREE = 0
+                trees : 5
+            SearchParams:
+                checks : 50
+            K : 2
+            MaxRatio : 0.8
+    EpipolarGeometry:
+        numTrials: 5
+        inlierRatio: 0.5
+        Method: 'Ransac'
+        Confidence :  0.9999
+        Threshold: 0.8
+    PnPSolver:
+        Method: 'P3P'
+        numTrials: 5
+        deltaT: 1.2
+        minRatio: 0.5
+        IterationsCount: 2000
+        ReprojectionError: 1
+        Confidence:  0.9999
+    BundleAdjustment:
+        enable: False
+Debug:
+    Plotting :
+        Features: True
+        FeatureMatches : False
