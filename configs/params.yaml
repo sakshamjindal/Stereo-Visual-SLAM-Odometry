@@ -22,6 +22,10 @@ geometry:
         method: 8    # ('Ransac' or cv2.RANSAC = 8)
         probability :  0.9999
         threshold: 0.8
+    triangulation : 
+        minDistThresh : 2
+        maxRadius : 30
+        repErrThresh : 0.5
     pnpSolver:
         method: 'P3P'
         numTrials: 5
