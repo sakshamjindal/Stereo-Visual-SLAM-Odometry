@@ -53,6 +53,7 @@ def filter_matching_inliers(leftMatchesPoints, rightMatchedPoints, intrinsic, pa
     To Do: Add docstring for function
     """
 
+    args_debug = params.debug
     args_epipolar = params.geometry.epipolarGeometry
 
     for i in range(args_epipolar.numTrials):
@@ -66,18 +67,19 @@ def filter_matching_inliers(leftMatchesPoints, rightMatchedPoints, intrinsic, pa
         mask_epipolar = mask_epipolar.ravel().astype(bool)
         ratio = sum(mask_epipolar) / len(mask_epipolar)
         
-        if (ratio > args_epipolar.inlierRatio):
-            print("Iterations of 5-point algorithm: {}".format(i+1))
-            print("Inlier Ratio :                   {}".format(ratio))
-            print("Good Essential Matrix calculated is good.")
-            break
-        else:
-            print("Bad Essential Matrix likely")
-            print("Inlier Ratio          : {}".format(ratio))
-            print("Run again. Iters Left : {}".format(args_epipolar.numTrials-i))
-            if i==args_epipolar.numTrials:
-                print("Fraction of inliers for E: {}".format(ratio))
-                print("Max iteration in 5-point algorithm trial reaches, bad E is likely ")
+        if args_debug.logging.inliersFilterRANSAC:
+            if (ratio > args_epipolar.inlierRatio):
+                print("Iterations of 5-point algorithm: {}".format(i+1))
+                print("Inlier Ratio :                   {}".format(ratio))
+                print("Good Essential Matrix calculation is likely.")
+                break
+            else:
+                print("Bad Essential Matrix likely")
+                print("Inlier Ratio          : {}".format(ratio))
+                print("Run again. Iters Left : {}".format(args_epipolar.numTrials-i))
+                if i==args_epipolar.numTrials:
+                    print("Fraction of inliers for E: {}".format(ratio))
+                    print("Max iteration in 5-point algorithm trial reaches, bad E is likely ")
         
     left_inliers = leftMatchesPoints[mask_epipolar]
     right_inliers = rightMatchedPoints[mask_epipolar]

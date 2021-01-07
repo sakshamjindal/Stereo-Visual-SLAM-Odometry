@@ -40,3 +40,5 @@ debug:
     plotting :
         features: False
         featureMatches : False
+    logging :
+        inliersFilterRANSAC: False
