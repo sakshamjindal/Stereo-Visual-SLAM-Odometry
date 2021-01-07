@@ -2,8 +2,14 @@ import cv2
 import numpy as np
 from .utils import project_points
 
+__all__ = ['triangulate_points', 'filter_triangulated_points', 'filter_matching_inliers']
+
 
 def triangulate_points(ptsLeft, ptsRight, projL, projR):
+
+    """
+    To Do: Add Docstring for function
+    """
 
     # triangulate points
     pts4D = cv2.triangulatePoints(projL, projR, ptsLeft.T, ptsRight.T)
@@ -21,11 +27,31 @@ def triangulate_points(ptsLeft, ptsRight, projL, projR):
 
     return pts3D, reprojError
 
-def filter_triangulated_points(pts3D, **args):
-    pass
+def filter_triangulated_points(points3D, reprojError, minDistThresh, maxRadius, repErrThresh):
+
+    """
+    To Do: Add docstring for function
+    """
+    
+    mask_x = np.logical_and((points3D[:,0]>-12), (points3D[:,0]<12))
+    mask_y = np.logical_and((points3D[:,1]<2), (points3D[:,1]>-8))
+    mask_z = (points3D[:,2]>minDistThresh)
+    mask_R = (points3D[:,0]**2 + points3D[:,1]**2 + points3D[:,2]**2)<maxRadius
+    mask_reproj = reprojError<repErrThresh
+    
+    mask_triangulation = np.logical_and(np.logical_and(mask_x, mask_y, mask_z), mask_reproj)
+    ratioFilter = sum(mask_triangulation)/len(mask_triangulation)
+    
+    points3D_filter = points3D[mask_triangulation]
+    
+    return points3D_filter, mask_triangulation, ratioFilter
 
 
 def filter_matching_inliers(leftMatchesPoints, rightMatchedPoints, intrinsic, params):
+
+    """
+    To Do: Add docstring for function
+    """
 
     args_epipolar = params.geometry.epipolarGeometry
 
@@ -57,5 +83,3 @@ def filter_matching_inliers(leftMatchesPoints, rightMatchedPoints, intrinsic, pa
     right_inliers = rightMatchedPoints[mask_epipolar]
 
     return left_inliers, right_inliers
-
-

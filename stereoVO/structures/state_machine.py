@@ -23,7 +23,7 @@ class VO_StateMachine():
         # manage information about frames 
         self.frames = StateBolts()
         
-        # maange the results of matched descriptors
+        # manage feature detection and matching results
         self.matchedPoints = StateBolts()
         self.keypoints = StateBolts()
         self.descriptors = StateBolts()
@@ -33,6 +33,7 @@ class VO_StateMachine():
         self.pts3D = None
         self.pts3D_Filter = None
         self.InliersFilter = StateBolts()
+        self.ratioTriangulationFilter = None
         
         # manage tracking results
         self.trackedPoints_further = StateBolts()
