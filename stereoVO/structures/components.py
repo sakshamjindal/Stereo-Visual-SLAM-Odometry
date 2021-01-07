@@ -12,9 +12,9 @@ class StateBolts(object):
     of properties of the VO State (VO_StateMachine) at one time instance
     """
 
-    def __init__(self):
-        self._left = None
-        self._right = None
+    def __init__(self, _left = None, _right = None):
+        self._left = _left
+        self._right = _right
         
     @property
     def left(self):

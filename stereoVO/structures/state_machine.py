@@ -36,8 +36,9 @@ class VO_StateMachine():
         self.ratioTriangulationFilter = None
         
         # manage tracking results
-        self.trackedPoints_further = StateBolts()
-        self.trackerPoints_P3P = StateBolts()
+        self.inliersTrackingFilter = StateBolts()
+        self.pointsTracked = StateBolts()
+        self.pts3D_TrackingFilter =  None
         
         # manage PnP (or P3P) filtered results
         self.InliersP3P = StateBolts()
