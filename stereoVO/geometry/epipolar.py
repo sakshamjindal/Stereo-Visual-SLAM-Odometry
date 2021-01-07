@@ -84,4 +84,4 @@ def filter_matching_inliers(leftMatchesPoints, rightMatchedPoints, intrinsic, pa
     left_inliers = leftMatchesPoints[mask_epipolar]
     right_inliers = rightMatchedPoints[mask_epipolar]
 
-    return left_inliers, right_inliers
+    return (left_inliers, right_inliers), mask_epipolar
