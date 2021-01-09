@@ -45,8 +45,8 @@ class VO_StateMachine():
         self.P3P_pts3D = None
         
         # manage 6DOF pose in the current state
-        # Location_TransVec = None
-        # Orientation_RotMat = None
+        Location = None
+        Orientation = None
 
     def __setattr__(self, name, value):
         if name in self.__dict__:
