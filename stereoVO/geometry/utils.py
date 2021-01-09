@@ -70,3 +70,12 @@ def drawMatches(img1, points1, img2, points2):
     # Show the image
     plt.imshow(out)
     plt.show()
+
+def error_calc(points_p, points_q):
+    
+    """
+    :param points_p (numpy.array) : size (Nx2)
+    :param points_q (numpy.array) : size (Nx2)
+    """
+    
+    return np.sqrt(np.sum((points_p-points_q)**2, axis=1))
