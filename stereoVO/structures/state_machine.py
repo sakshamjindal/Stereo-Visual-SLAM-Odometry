@@ -36,17 +36,17 @@ class VO_StateMachine():
         self.ratioTriangulationFilter = None
         
         # manage tracking results
-        self.inliersTrackingFilter = StateBolts()
+        self.inliersTracking = StateBolts()
         self.pointsTracked = StateBolts()
-        self.pts3D_TrackingFilter =  None
+        self.pts3D_Tracking =  None
         
         # manage PnP (or P3P) filtered results
         self.InliersP3P = StateBolts()
         self.P3P_pts3D = None
         
         # manage 6DOF pose in the current state
-        Location = None
-        Orientation = None
+        location = None
+        orientation = None
 
     def __setattr__(self, name, value):
         if name in self.__dict__:
