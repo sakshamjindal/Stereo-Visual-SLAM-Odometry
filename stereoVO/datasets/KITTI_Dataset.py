@@ -45,6 +45,7 @@ class KittiDataset():
         self.right_image_paths=self.load_image_paths(self.right_images_path)
 
         self.camera_intrinsic, self.PL, self.PR =self.load_camera_parameters(self.calibfile)
+        self.intrinsic = self.camera_intrinsic()
 
         assert len(self.ground_truth)==len(self.left_image_paths)
 

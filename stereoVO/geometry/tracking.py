@@ -18,7 +18,7 @@ class TrackingEngine():
         self.intrinsic = intrinsic
         self.params = params
     
-    def get_tracked_features(self):
+    def process_tracked_features(self):
         
         _, pointsTrackedLeft, maskTrackingLeft = TrackingEngine.track_features(self.prevFrames.left,
                                                                                               self.currFrames.left,
@@ -32,8 +32,7 @@ class TrackingEngine():
         self.maskTracking = np.logical_and(maskTrackingLeft, maskTrackingRight)
         self.pointsTracked = StateBolts(pointsTrackedLeft[self.maskTracking], pointsTrackedRight[self.maskTracking])
         self.prevInliers = StateBolts(self.prevInliers.left[self.maskTracking], self.prevInliers.right[self.maskTracking])
-        
-        return self.prevInliers, self.pointsTracked, self.maskTracking
+
     
     def filter_inliers(self, pts3D_Filter):
         

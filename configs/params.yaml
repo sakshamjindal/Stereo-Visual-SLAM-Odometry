@@ -2,6 +2,9 @@ initial:
     location: [0,0,0]
     orientation: [[1,0,0], [0, 1, 0], [0, 0, 1]] 
     inlierRatio: 0.5
+dataset:
+    name: 'KITTI'
+    path: '../KITTI/KITTI_gray/dataset/sequences/00/'
 geometry:
     detection: 
         method: 'SIFT'
@@ -34,6 +37,8 @@ geometry:
         iterationsCount: 2000
         reprojectionError: 1
         confidence:  0.9999
+    lsqsolver:
+        enable: True
     bundleAdjustment:
         enable: False
 debug:
