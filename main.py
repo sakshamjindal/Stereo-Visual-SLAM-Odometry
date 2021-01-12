@@ -16,7 +16,7 @@ def parse_argument():
 def draw_trajectory(traj, frame_id, x, y, z, draw_x, draw_y, true_x, true_y):
     
     cv2.circle(traj, (draw_x,draw_y), 1, (frame_id*255/4540,255-frame_id*255/4540,0), 1)
-    #cv2.circle(traj, (true_x,true_y), 1, (0,0,255), 2)
+    cv2.circle(traj, (true_x,true_y), 1, (0,0,255), 2)
     cv2.rectangle(traj, (10, 20), (600, 60), (0,0,0), -1)
     text = "Coordinates: x=%2fm y=%2fm z=%2fm"%(x,y,z)
     cv2.putText(traj, text, (20,40), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1, 8)
@@ -55,9 +55,9 @@ def main():
 
         x, y, z = pred_location[0], pred_location[1], pred_location[2]
 
-        offset_x, offset_y = 0,0
+        offset_x, offset_y = 1,1
         draw_x, draw_y =int(x) + 290 - offset_x, int(z) + 290 - offset_y
-        true_x, true_y = int(ground_pose[0][-1]) + 290, int(ground_pose[0][-1]) + 290
+        true_x, true_y = int(ground_pose[0][-1]) + 290, int(ground_pose[2][-1]) + 290
 
         draw_trajectory(blank_slate, index, x, y, z, draw_x, draw_y, true_x, true_y)
         cv2.imshow('Road facing camera', left_frame)
