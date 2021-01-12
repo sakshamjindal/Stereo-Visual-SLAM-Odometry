@@ -9,17 +9,17 @@ from stereoVO.geometry import (DetectionEngine,
                                TrackingEngine,
                                filter_matching_inliers, 
                                triangulate_points, 
-                               filter_triangulated_points,
-                               project_points)
+                               filter_triangulated_points)
 
 import ipdb
-                
+
+
 class StereoVO():
 
     def __init__(self, intrinsic, PL, PR, params):
-    
+
         """
-        To Do : Add docstring here        
+        To Do : Add docstring here
         """
 
         self.intrinsic = intrinsic
@@ -55,26 +55,51 @@ class StereoVO():
             # Update the initial stereo state with detection and triangualation
             self._update_stereo_state(self.currState)
 
+            # Feature Tracking from prevState to currState
+            self._process_feature_tracking()
 
-        # Feature Tracking from prevState to currState
-        self._process_feature_tracking()                   
+            # P3P Solver
+            # obtains the pose of the camera in coordinate frame of prevState
+            r_mat, t_vec = self.solve_pnp()
 
-        # P3P Solver
-        # obtains the pose of the camera in coordinate frame of prevState
-        r_mat, t_vec = self.solve_pnp()
+            # if optimisation is enabled
+            # do pose updation with the optimizer
+            if self.params.geometry.lsqsolver.enable:
+                r_mat, t_vec = self._do_optimization(r_mat, t_vec)
 
-        # if optimisation is enabled
-        # do pose updation with the optimizer
-        if self.params.geometry.lsqsolver.enable:
-            r_mat, t_vec = self._do_optimization(r_mat, t_vec)
+            # Upating the pose of the camera of currState  
+            # C_n = C_n-1 * dT_n-1; where dT_n-1 is in the 
+            # reference of coordinate system of the second camera
+            self.currState.orientation = self.prevState.orientation @ r_mat
+            self.currState.location = self.prevState.orientation @ t_vec + self.prevState.location.reshape(-1,1)
+            self.currState.location = self.currState.location.flatten()
 
-        # Upating the pose of the camera of currState  
-        # C_n = C_n-1 * dT_n-1; where dT_n-1 is in the 
-        # reference of coordinate system of the second camera
-        # Refence : VO Tutorial by D. ScaramuzzaLink : http://rpg.ifi.uzh.ch/docs/VO_Part_I_Scaramuzza.pdf
-        self.currState.orientation = self.prevState.orientation @ r_mat
-        self.currState.location = self.prevState.orientation @ t_vec + self.prevState.location.reshape(-1,1)
-        self.currState.location = self.currState.location.flatten()
+            self.currState.keypoints = self.currState.pointsTracked
+            self.currState.landmarks = self.prevState.P3P_pts3D
+
+        else:
+            self.currState = VO_StateMachine(state_num)
+            self.currState.frames = left_frame, right_frame
+
+            self._process_feature_tracking()
+
+            r_mat, t_vec = self.solve_pnp()
+
+            if self.params.geometry.lsqsolver.enable:
+                r_mat, t_vec = self._do_optimization(r_mat, t_vec)
+
+            self.currState.orientation = self.prevState.orientation @ r_mat
+            self.currState.location = self.prevState.orientation @ t_vec + self.prevState.location.reshape(-1,1)
+            self.currState.location = self.currState.location.flatten()
+
+            self._update_stereo_state(self.currState)
+
+        print("Frame {} Processing Done ....".format(state_num + 1))
+        print("Current Location : X : {x}, Y = {y}, Z = {z}".format(x = self.currState.location[0], 
+                                                                    y = self.currState.location[1], 
+                                                                    z = self.currState.location[2]))
+
+        self.prevState = self.currState
 
         return self.currState.location, self.currState.orientation
 
@@ -179,7 +204,7 @@ class StereoVO():
         # Detection Engine, Matching and Triangulation for first frame
         detection_engine = DetectionEngine(stereoState.frames.left, stereoState.frames.right, self.params)
 
-        stereoState.matchedPoints, stereoState.keypoints, stereoState.descriptors = detection_engine.get_matching_keypoints()
+        stereoState.matchedPoints, stereoState.keyPoints, stereoState.descriptors = detection_engine.get_matching_keypoints()
 
         stereoState.inliers, _ = filter_matching_inliers(stereoState.matchedPoints.left,
                                                          stereoState.matchedPoints.right,

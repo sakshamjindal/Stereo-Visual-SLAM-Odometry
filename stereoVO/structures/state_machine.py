@@ -25,7 +25,7 @@ class VO_StateMachine():
         
         # manage feature detection and matching results
         self.matchedPoints = StateBolts()
-        self.keypoints = StateBolts()
+        self.keyPoints = StateBolts()
         self.descriptors = StateBolts()
         self.inliers = StateBolts()
         
@@ -47,6 +47,10 @@ class VO_StateMachine():
         # manage 6DOF pose in the current state
         self.location = None
         self.orientation = None
+
+        # manage landmark information
+        self.keypoints = StateBolts()
+        self.landmarks = None
 
     def __setattr__(self, name, value):
         if name in self.__dict__:
