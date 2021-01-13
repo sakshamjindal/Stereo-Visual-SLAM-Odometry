@@ -167,13 +167,13 @@ class StereoVO():
             ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
             scale = np.linalg.norm(t_vec)
             
-            if scale<args_pnpSolver.deltaT and ratio>args_pnpSolver.minRatio:
-                print("Scale of translation of camera     : {}".format(scale))
-                print("Solution obtained in P3P Iteration : {}".format(i+1))
-                print("Ratio of Inliers                   : {}".format(ratio))
-                break
-            else:
-                print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
+            # if scale<args_pnpSolver.deltaT and ratio>args_pnpSolver.minRatio:
+            #     print("Scale of translation of camera     : {}".format(scale))
+            #     print("Solution obtained in P3P Iteration : {}".format(i+1))
+            #     print("Ratio of Inliers                   : {}".format(ratio))
+            #     break
+            # else:
+            #     print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
 
         self.currState.pointsTracked = (self.currState.pointsTracked.left[idxPose], self.currState.pointsTracked.right[idxPose])
         self.prevState.P3P_pts3D = self.prevState.pts3D_Tracking[idxPose]

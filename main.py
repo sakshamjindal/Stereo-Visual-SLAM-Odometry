@@ -1,10 +1,12 @@
 import numpy as np 
 import cv2
 import argparse
+import matplotlib.pyplot as plt
+import ipdb
 
 from stereoVO.configs import yaml_parser
 from stereoVO.datasets import KittiDataset
-from stereoVO.utils import rmse_error
+from stereoVO.utils import rmse_error, draw_trajectory_2D, draw_trajectory_3D, draw_rmse_error
 from stereoVO.model import StereoVO
 
 def parse_argument():
@@ -42,27 +44,73 @@ def main():
     # Initialise an empty drawing board for trajectory
     blank_slate = np.zeros((600,600,3), dtype=np.uint8)
 
+    figSize=(6,4)
+    
+    fig1 = plt.figure(figsize=figSize)
+    ax1 = fig1.add_subplot(111, projection='3d')
+
+    fig2 = plt.figure(figsize=figSize)
+    ax2 = fig2.add_subplot(111, projection='3d')
+
+    fig3 = plt.figure(figsize=figSize)
+    ax3 = fig3.add_subplot(111)
+
+    ax1.set_xlabel('X')
+    ax1.set_ylabel('Y')
+    ax1.set_zlabel('Z')
+    
+    ax1.set_xlim3d(-300, 300)
+    ax1.set_ylim3d(-300, 300)
+    ax1.set_zlim3d(-500, 500)
+
+    ax1.view_init()
+
+    ax2.set_xlabel('X')
+    ax2.set_ylabel('Y')
+    ax2.set_zlabel('Z')
+    
+    ax2.set_xlim3d(-300, 300)
+    ax2.set_ylim3d(-300, 300)
+    ax2.set_zlim3d(-500, 500)
+
+    ax2.view_init()
+
+    ax3.set_xlim(0,500)
+    ax3.set_ylim(0,5)
+
+
     # Iterate over the frame and update the rotation and translation vector
     for index in range(num_frames):
         left_frame, right_frame, ground_pose = dataset[index]
 
         pred_location, pred_orientation = model(left_frame, right_frame, index)
 
-        print(index)
-        print("----------------------------------------")
-        print(pred_location)
-        print(pred_orientation)
-
         x, y, z = pred_location[0], pred_location[1], pred_location[2]
-
         offset_x, offset_y = 1,1
-        draw_x, draw_y =int(x) + 290 - offset_x, int(z) + 290 - offset_y
-        true_x, true_y = int(ground_pose[0][-1]) + 290, int(ground_pose[2][-1]) + 290
+        rmse = rmse_error(pred_location, ground_pose[:,-1])
+
+        draw_x, draw_y = int(x) + 290 - offset_x ,  290 - int(z) + offset_y
+        true_x, true_y = int(ground_pose[0][-1]) + 290, 290 - int(ground_pose[2][-1])
 
         draw_trajectory(blank_slate, index, x, y, z, draw_x, draw_y, true_x, true_y)
+        draw_trajectory_3D(pred_orientation, pred_location, ax1, ax2)
+        draw_rmse_error(index, rmse, ax3)
+        print(rmse)
+
         cv2.imshow('Road facing camera', left_frame)
         cv2.waitKey(1)
 
+        ax1.clear()
+        ax1.set_xlabel('X')
+        ax1.set_ylabel('Y')
+        ax1.set_zlabel('Z')
+        
+        ax1.set_xlim3d(-300, 300)
+        ax1.set_ylim3d(-300, 300)
+        ax1.set_zlim3d(-500, 500)
+        ax1.view_init()
+
+    plt.show()
 
 if __name__ == "__main__":
     main()
