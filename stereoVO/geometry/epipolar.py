@@ -35,8 +35,8 @@ def filter_triangulated_points(points3D, reprojError, minDistThresh, maxRadius, 
     
     mask_x = np.logical_and((points3D[:,0]>-12), (points3D[:,0]<12))
     mask_y = np.logical_and((points3D[:,1]<2), (points3D[:,1]>-8))
-    mask_z = (points3D[:,2]>minDistThresh)
-    mask_R = (points3D[:,0]**2 + points3D[:,1]**2 + points3D[:,2]**2)<maxRadius
+    mask_z = (points3D[:, 2] > minDistThresh)
+    mask_R = (points3D[:, 0]**2 + points3D[:,1]**2 + points3D[:,2]**2)<maxRadius
     mask_reproj = reprojError<repErrThresh
     
     mask_triangulation = np.logical_and(np.logical_and(mask_x, mask_y, mask_z), mask_reproj)

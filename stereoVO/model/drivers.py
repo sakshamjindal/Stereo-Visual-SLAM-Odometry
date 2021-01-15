@@ -18,7 +18,9 @@ from stereoVO.geometry import (DetectionEngine,
 class StereoDrivers():
 
     """
-    Base class for all driver code for running the engines        
+    Base class for all driver code for running the engines of feature detection, 
+    tracking features, olving PnP projection, calculating reprojection error and 
+    non-linear least square optimisation of relative rotation and orientation
     """
 
     # To Do : Initialise __init__ module and global variables to be used in the subclass
@@ -26,7 +28,15 @@ class StereoDrivers():
     def _do_optimization(self, r_mat, t_vec):
 
         """
-        To Do : Add docstring here        
+        Driver code for optimisation and non-linear least square optimisation of calculated pose 
+        (relative rotation and relative translation)
+
+        :param r_mat (np.array) : size(3,3) : relative rotation in coordinate frame of previous stereo state
+        :param t_vec (np.array) : size () : relative translation in cooridinate frame of previous stereo state
+
+        Returns:
+            r_mat (np.array) : size(3,3) : relative rotation in coordinate frame of previous stereo state
+            t_vec (np.array) : size () : relative translation in cooridinate frame of previous stereo state
         """
 
         # Convert the matrix from world coordinates(prevState) to camera coordinates (currState)
@@ -85,17 +95,18 @@ class StereoDrivers():
             r_mat = r_mat.T
             
             idxPose = idxPose.flatten()
+
+            # To Do : Add logger object instead
+            ## ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
+            ## scale = np.linalg.norm(t_vec)
             
-            # ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
-            # scale = np.linalg.norm(t_vec)
-            
-            # if scale < args_pnpSolver.deltaT and ratio > args_pnpSolver.minRatio:
-            #     print("Scale of translation of camera     : {}".format(scale))
-            #     print("Solution obtained in P3P Iteration : {}".format(i+1))
-            #     print("Ratio of Inliers                   : {}".format(ratio))
-            #     break
-            # else:
-            #     print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
+            ## if scale < args_pnpSolver.deltaT and ratio > args_pnpSolver.minRatio:
+            ##     print("Scale of translation of camera     : {}".format(scale))
+            ##     print("Solution obtained in P3P Iteration : {}".format(i+1))
+            ##     print("Ratio of Inliers                   : {}".format(ratio))
+            ##     break
+            ## else:
+            ##     print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
 
         self.currState.pointsTracked = (self.currState.pointsTracked.left[idxPose], self.currState.pointsTracked.right[idxPose])
         self.prevState.P3P_pts3D = self.prevState.pts3D_Tracking[idxPose]
@@ -120,7 +131,12 @@ class StereoDrivers():
     def _update_stereo_state(self, stereoState):
 
         """
-        To Do : Add docstring here        
+        Driver code for updating stereo state for frames in the current state
+        Calls upon Detection Engine to detect features in the both the frames, 
+        matching detected features, filtering matched inliers, triangulating to 
+        calculating 3D point cloud using Direct Linear Transform (DLT) a
+
+
         """
 
         # Detection Engine, Matching and Triangulation for first frame
