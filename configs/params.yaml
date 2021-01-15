@@ -31,7 +31,7 @@ geometry:
         repErrThresh : 0.5
     pnpSolver:
         method: 'P3P'
-        numTrials: 5
+        numTrials: 1
         deltaT: 1.2
         minRatio: 0.5
         iterationsCount: 2000

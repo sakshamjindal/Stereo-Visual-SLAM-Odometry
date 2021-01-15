@@ -84,29 +84,30 @@ class StereoDrivers():
                                                           reprojectionError=args_pnpSolver.reprojectionError,
                                                           confidence=args_pnpSolver.confidence,
                                                           flags=cv2.SOLVEPNP_P3P)
-            
-            
+
             r_mat, _ = cv2.Rodrigues(r_vec)
-            
-            # r_vec and t_vec obtained are in camera coordinate frames
-            # we need to convert these matrices in world coordinates system
-            # or we need to transforms the matrix from currState to prevState
+
+            # r_vec and t_vec obtained are in camera coordinate frames (currState)
+            # we need to convert these matrices in world coordinates system (prevState)
             t_vec = -r_mat.T @ t_vec
             r_mat = r_mat.T
-            
+
             idxPose = idxPose.flatten()
 
-            # To Do : Add logger object instead
-            ## ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
-            ## scale = np.linalg.norm(t_vec)
-            
-            ## if scale < args_pnpSolver.deltaT and ratio > args_pnpSolver.minRatio:
-            ##     print("Scale of translation of camera     : {}".format(scale))
-            ##     print("Solution obtained in P3P Iteration : {}".format(i+1))
-            ##     print("Ratio of Inliers                   : {}".format(ratio))
-            ##     break
-            ## else:
-            ##     print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
+            '''
+            To Do : Add logger object instead
+
+            ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
+            scale = np.linalg.norm(t_vec)
+         
+            if scale < args_pnpSolver.deltaT and ratio > args_pnpSolver.minRatio:
+                print("Scale of translation of camera     : {}".format(scale))
+                print("Solution obtained in P3P Iteration : {}".format(i+1))
+                print("Ratio of Inliers                   : {}".format(ratio))
+                break
+            else:
+                print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
+            '''
 
         self.currState.pointsTracked = (self.currState.pointsTracked.left[idxPose], self.currState.pointsTracked.right[idxPose])
         self.prevState.P3P_pts3D = self.prevState.pts3D_Tracking[idxPose]
@@ -116,7 +117,7 @@ class StereoDrivers():
     def _process_feature_tracking(self):
 
         """
-        To Do : Add docstring here        
+        Driver code for   
         """
         
         prevFrames = self.prevState.frames
@@ -140,22 +141,21 @@ class StereoDrivers():
                             track of computed history of state variables
         """
 
-        detection_engine = DetectionEngine(stereoState.frames.left, stereoState.frames.right, self.params)
-
+        detection_engine = DetectionEngine(stereoState.frames.left,
+                                           stereoState.frames.right,
+                                           self.params)
         stereoState.matchedPoints, stereoState.keyPoints, stereoState.descriptors = detection_engine.get_matching_keypoints()
-
         stereoState.inliers, _ = filter_matching_inliers(stereoState.matchedPoints.left,
                                                          stereoState.matchedPoints.right,
                                                          self.intrinsic,
                                                          self.params)
-
         stereoState.pts3D, reproj_error = triangulate_points(stereoState.inliers.left,
-                                                            stereoState.inliers.right,
-                                                            self.PL,
-                                                            self.PR)
-
+                                                             stereoState.inliers.right,
+                                                             self.PL,
+                                                             self.PR)
         args_triangulation = self.params.geometry.triangulation
-        stereoState.pts3D_Filter, maskTriangulationFilter, ratioFilter = filter_triangulated_points(stereoState.pts3D, reproj_error, **args_triangulation)
-
+        stereoState.pts3D_Filter, maskTriangulationFilter, ratioFilter = filter_triangulated_points(stereoState.pts3D, 
+                                                                                                    reproj_error, 
+                                                                                                    **args_triangulation)
         stereoState.InliersFilter = stereoState.inliers.left[maskTriangulationFilter], stereoState.inliers.right[maskTriangulationFilter]
         stereoState.ratioTriangulationFilter = ratioFilter
