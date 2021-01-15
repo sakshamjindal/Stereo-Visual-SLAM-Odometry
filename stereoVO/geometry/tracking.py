@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
-from ..structures import StateBolts
-from . import filter_matching_inliers
+from stereoVO.structures import StateBolts
+from stereoVO.geometry import filter_matching_inliers
 
 '''
 To Do: Make the tracking engine modular to accept the following 

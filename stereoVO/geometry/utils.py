@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def project_points(points3D, projectionMatrix):
     """
     :param points3D (numpy.array) : size (Nx3)

@@ -23,20 +23,18 @@ class StereoDrivers():
     non-linear least square optimisation of relative rotation and orientation
     """
 
-    # To Do : Initialise __init__ module and global variables to be used in the subclass
-
     def _do_optimization(self, r_mat, t_vec):
 
         """
-        Driver code for optimisation and non-linear least square optimisation of calculated pose 
+        Driver code for optimisation and non-linear least square optimisation of estimated pose 
         (relative rotation and relative translation)
 
         :param r_mat (np.array) : size(3,3) : relative rotation in coordinate frame of previous stereo state
-        :param t_vec (np.array) : size () : relative translation in cooridinate frame of previous stereo state
+        :param t_vec (np.array) : size (3,1) : relative translation in coordinate frame of previous stereo state
 
         Returns:
             r_mat (np.array) : size(3,3) : relative rotation in coordinate frame of previous stereo state
-            t_vec (np.array) : size () : relative translation in cooridinate frame of previous stereo state
+            t_vec (np.array) : size(3,1) : relative translation in cooridinate frame of previous stereo state
         """
 
         # Convert the matrix from world coordinates(prevState) to camera coordinates (currState)
@@ -47,12 +45,13 @@ class StereoDrivers():
         # Prepare an initial set of parameters to the optimizer
         doF = np.concatenate((r_vec, t_vec)).flatten()
     
-        # Prepare the solver for minimization
-        optRes = least_squares(get_minimization, doF, method='lm', max_nfev=2000,
-                               args=(self.prevState.P3P_pts3D, 
+        # Prepare the solver for minimization and run Non-linear Least Squares optimization to optimize R and T from P3P solver
+        optRes = least_squares(get_minimization, doF, 
+                               method='lm', max_nfev=2000,
+                               args=(self.prevState.P3P_pts3D,
                                      self.currState.pointsTracked.left,
                                      self.currState.pointsTracked.right, 
-                                     self.PL,self.PR))
+                                     self.PL, self.PR))
         
         # r_vec and t_vec obtained are in camera coordinate frames (currState)
         # we need to convert these matrix to world coordinates system (prevState)
@@ -69,13 +68,22 @@ class StereoDrivers():
     def _solve_pnp(self):
 
         """
-        To Do : Add docstring here        
+        Driver Code for solving Perspective-n-Point (PnP) problem. The module uses OpenCV's implementation of P3P algorithm
+        and RANSAC to retrieve the relative rotation  and translation vector (used Rodrigues formula to get rotation matrix) between the world (previous state) 
+        and camera (current state) in the camera coordinate frame.  Module further processes to obtain the relative rotation and 
+        translation in the world coordinate frame (camera coordinate frame of previous state). Also,  
+
+        Return:
+            :r_mat (np.array) : size(3,3) : relative rotation in world coordinate frame (previous stereo state)
+            :t_vec (np.array) : size(3,1) : relative translation in world coordinate frame (previous stereo state)      
         """
 
+        # Prepare argument for PnP solver
         args_pnpSolver = self.params.geometry.pnpSolver
 
         for i in range(args_pnpSolver.numTrials):
-            
+
+            # Obtain r_vec and t_vec in camera coordinate frames (currState)
             _, r_vec, t_vec, idxPose = cv2.solvePnPRansac(self.prevState.pts3D_Tracking,
                                                           self.currState.pointsTracked.left,
                                                           self.intrinsic,
@@ -85,30 +93,31 @@ class StereoDrivers():
                                                           confidence=args_pnpSolver.confidence,
                                                           flags=cv2.SOLVEPNP_P3P)
 
+            # Use Rodrigues formaula (SO3) to obtain rotational matrix
             r_mat, _ = cv2.Rodrigues(r_vec)
 
-            # r_vec and t_vec obtained are in camera coordinate frames (currState)
-            # we need to convert these matrices in world coordinates system (prevState)
+            # Convert relative roation and translation in the world coordiante frame (prevState)
             t_vec = -r_mat.T @ t_vec
             r_mat = r_mat.T
 
+            # Prepare index to retrieve inliers on the current traced points and 3D points
             idxPose = idxPose.flatten()
 
-            '''
-            To Do : Add logger object instead
-
+            # Ensure we get enough inliers from the PnP problem
+            '''To Do: Add logger object to record the terminal output'''
             ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
             scale = np.linalg.norm(t_vec)
            
             if scale < args_pnpSolver.deltaT and ratio > args_pnpSolver.minRatio:
-                print("Scale of translation of camera     : {}".format(scale))
-                print("Solution obtained in P3P Iteration : {}".format(i+1))
-                print("Ratio of Inliers                   : {}".format(ratio))
+                # print("Scale of translation of camera     : {}".format(scale))
+                # print("Solution obtained in P3P Iteration : {}".format(i+1))
+                # print("Ratio of Inliers                   : {}".format(ratio))
                 break
             else:
-                print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
-            '''
+                pass
+                # print("Warning : Max Iter : {} reached, still large position delta produced".format(i))
 
+        # Remove outliers from tracked points and triangulated and filtered 3D world coordinate points
         self.currState.pointsTracked = (self.currState.pointsTracked.left[idxPose], self.currState.pointsTracked.right[idxPose])
         self.prevState.P3P_pts3D = self.prevState.pts3D_Tracking[idxPose]
 
@@ -130,8 +139,8 @@ class StereoDrivers():
         # Initialise trackig engine to track features using optical flow
         tracker = TrackingEngine(prevFrames, currFrames, prevInliers, self.intrinsic, self.params)
         
-        # Actual executor module which tracks the features on the current set of frames
-        # and filters inliers from the detection engine and tracking engine
+        # Actual executor module which tracks the features on the current set of 
+        # frames and filters inliers from the detection engine and tracking engine
         tracker.process_tracked_features()
         
         # executor code to apply epipolar contraint on the prevstate and current state frames
@@ -163,9 +172,9 @@ class StereoDrivers():
         # Triangulation to obtain 3D points
         args_triangulation = self.params.geometry.triangulation
         stereoState.pts3D, reproj_error = triangulate_points(stereoState.inliers.left,
-                                                            stereoState.inliers.right,
-                                                            self.PL,
-                                                            self.PR)
+                                                             stereoState.inliers.right,
+                                                             self.PL,
+                                                             self.PR)
 
         # Filtering inliers and 3D points using thresholds and constraints
         stereoState.pts3D_Filter, maskTriangulationFilter, ratioFilter = filter_triangulated_points(stereoState.pts3D, reproj_error, **args_triangulation)
