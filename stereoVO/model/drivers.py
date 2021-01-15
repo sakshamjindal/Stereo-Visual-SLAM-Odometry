@@ -117,15 +117,25 @@ class StereoDrivers():
     def _process_feature_tracking(self):
 
         """
+        Driver code for trackinng features across consecutive stero states and filtering inliers. 
+        Tracks features from previous state to current state on both the stereo frames. 
+        Tracked features calculted here are used for solving Perspective-n-Point Problem.
         """
         
+        # Prepare inputs for tracking engine
         prevFrames = self.prevState.frames
         currFrames = self.currState.frames
         prevInliers = self.prevState.InliersFilter
 
-        # Feature Tracking from prev state to current state
+        # Initialise trackig engine to track features using optical flow
         tracker = TrackingEngine(prevFrames, currFrames, prevInliers, self.intrinsic, self.params)
+        
+        # Actual executor module which tracks the features on the current set of frames
+        # and filters inliers from the detection engine and tracking engine
         tracker.process_tracked_features()
+        
+        # executor code to apply epipolar contraint on the prevstate and current state frames
+        # and furtker filter inliers from detection engine, trackign engine and 3D points
         self.prevState.inliersTracking, self.currState.pointsTracked, self.prevState.pts3D_Tracking = tracker.filter_inliers(self.prevState.pts3D_Filter)   
 
     def _update_stereo_state(self, stereoState):

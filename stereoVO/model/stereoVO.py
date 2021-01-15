@@ -5,8 +5,8 @@ from stereoVO.model.drivers import StereoDrivers
 class StereoVO(StereoDrivers):
 
     """
-    StereoVo : is the main driver code which calls upon drivers codes for DetectionEngine, TrackingEngine, PnP solver, Optimization
-    to calculate the relative location and orientation of a stereo state at particular time instant
+    StereoVo : is the main driver code which calls upon drivers codes for DetectionEngine, TrackingEngine, PnP solver, 
+    Optimization to calculate the relative location and orientation of a stereo state at particular time instant
     """
 
     def __init__(self, intrinsic, PL, PR, params):
