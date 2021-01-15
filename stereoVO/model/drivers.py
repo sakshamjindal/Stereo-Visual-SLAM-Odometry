@@ -136,10 +136,10 @@ class StereoDrivers():
         matching detected features, filtering matched inliers, triangulating to 
         calculating 3D point cloud using Direct Linear Transform (DLT) a
 
-
+        :param StereoState (VO_StateMachine) : state object for keeping 
+                            track of computed history of state variables
         """
 
-        # Detection Engine, Matching and Triangulation for first frame
         detection_engine = DetectionEngine(stereoState.frames.left, stereoState.frames.right, self.params)
 
         stereoState.matchedPoints, stereoState.keyPoints, stereoState.descriptors = detection_engine.get_matching_keypoints()
