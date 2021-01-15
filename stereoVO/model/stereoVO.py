@@ -1,3 +1,5 @@
+import numpy as np
+
 from stereoVO.structures import VO_StateMachine
 from stereoVO.model.drivers import StereoDrivers
 
@@ -49,7 +51,7 @@ class StereoVO(StereoDrivers):
             self._process_continuous_frame(left_frame, right_frame, state_num)
 
         # To Do : Add logger object instead
-        print("Frame {} Processing Done ...................".format(state_num + s1))
+        print("Frame {} Processing Done ...................".format(state_num + 1))
         print("Current Location : X : {x}, Y = {y}, Z = {z}".format(x=self.currState.location[0],
                                                                     y=self.currState.location[1],
                                                                     z=self.currState.location[2]))
@@ -81,8 +83,6 @@ class StereoVO(StereoDrivers):
         Processes second frame of the stereo state
         """
 
-        self._process_second_frame(left_frame, right_frame, state_num)
-
         # Initialise the current stereo state
         self.currState = VO_StateMachine(state_num)
         self.currState.frames = left_frame, right_frame
@@ -106,8 +106,7 @@ class StereoVO(StereoDrivers):
         # C_n = C_n-1 * dT_n-1; where dT_n-1 is in the
         # reference of coordinate system of the second camera
         self.currState.orientation = self.prevState.orientation @ r_mat
-        self.currState.location = (self.prevState.orientation @ t_vec 
-                                   + self.prevState.location.reshape(-1,1)
+        self.currState.location = self.prevState.orientation @ t_vec + self.prevState.location.reshape(-1,1)
         self.currState.location = self.currState.location.flatten()
 
     def _process_continuous_frame(self, left_frame, right_frame, state_num):
@@ -134,8 +133,7 @@ class StereoVO(StereoDrivers):
         # C_n = C_n-1 * dT_n-1; where dT_n-1 is in the
         # reference of coordinate system of the second camera
         self.currState.orientation = self.prevState.orientation @ r_mat
-        self.currState.location = (self.prevState.orientation @ t_vec 
-                                   + self.prevState.location.reshape(-1,1)
+        self.currState.location = self.prevState.orientation @ t_vec + self.prevState.location.reshape(-1,1)
         self.currState.location = self.currState.location.flatten()
 
         # Update the initial stereo state with detection and triangualation

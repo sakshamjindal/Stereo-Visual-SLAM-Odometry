@@ -101,7 +101,10 @@ class StereoDrivers():
             r_mat = r_mat.T
 
             # Prepare index to retrieve inliers on the current traced points and 3D points
-            idxPose = idxPose.flatten()
+            try:
+                idxPose = idxPose.flatten()
+            except:
+                import ipdb; ipdb.set_trace()
 
             # Ensure we get enough inliers from the PnP problem
             '''To Do: Add logger object to record the terminal output'''
