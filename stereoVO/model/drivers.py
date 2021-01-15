@@ -99,7 +99,7 @@ class StereoDrivers():
 
             ratio = len(idxPose)/len(self.prevState.pts3D_Tracking)
             scale = np.linalg.norm(t_vec)
-         
+           
             if scale < args_pnpSolver.deltaT and ratio > args_pnpSolver.minRatio:
                 print("Scale of translation of camera     : {}".format(scale))
                 print("Solution obtained in P3P Iteration : {}".format(i+1))
@@ -117,7 +117,6 @@ class StereoDrivers():
     def _process_feature_tracking(self):
 
         """
-        Driver code for   
         """
         
         prevFrames = self.prevState.frames
@@ -141,21 +140,24 @@ class StereoDrivers():
                             track of computed history of state variables
         """
 
-        detection_engine = DetectionEngine(stereoState.frames.left,
-                                           stereoState.frames.right,
-                                           self.params)
+        # Feature Detection and Matching
+        detection_engine = DetectionEngine(stereoState.frames.left, stereoState.frames.right, self.params)
         stereoState.matchedPoints, stereoState.keyPoints, stereoState.descriptors = detection_engine.get_matching_keypoints()
+
+        # Filtering inliers using epipolar constraint
         stereoState.inliers, _ = filter_matching_inliers(stereoState.matchedPoints.left,
                                                          stereoState.matchedPoints.right,
                                                          self.intrinsic,
                                                          self.params)
-        stereoState.pts3D, reproj_error = triangulate_points(stereoState.inliers.left,
-                                                             stereoState.inliers.right,
-                                                             self.PL,
-                                                             self.PR)
+
+        # Triangulation to obtain 3D points
         args_triangulation = self.params.geometry.triangulation
-        stereoState.pts3D_Filter, maskTriangulationFilter, ratioFilter = filter_triangulated_points(stereoState.pts3D, 
-                                                                                                    reproj_error, 
-                                                                                                    **args_triangulation)
+        stereoState.pts3D, reproj_error = triangulate_points(stereoState.inliers.left,
+                                                            stereoState.inliers.right,
+                                                            self.PL,
+                                                            self.PR)
+
+        # Filtering inliers and 3D points using thresholds and constraints
+        stereoState.pts3D_Filter, maskTriangulationFilter, ratioFilter = filter_triangulated_points(stereoState.pts3D, reproj_error, **args_triangulation)
         stereoState.InliersFilter = stereoState.inliers.left[maskTriangulationFilter], stereoState.inliers.right[maskTriangulationFilter]
         stereoState.ratioTriangulationFilter = ratioFilter
