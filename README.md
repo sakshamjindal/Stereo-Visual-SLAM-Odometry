@@ -2,7 +2,7 @@
 
 ## **About**
 
-This project implements Stereo Visual Odometry using motion from 3D structure and Image correspondences to recover 6-DOF camera pose (with local non-linear least square optimisation) using a calibrated stereo pair and estimate trajectory of the camera for various scenarios in KITTI dataset
+This project implements Stereo Visual Odometry using motion from 3D structure and image correspondences to recover 6-DOF camera pose (with local non-linear least square optimisation) using a calibrated stereo pair and estimate trajectory of the camera for various scenarios in KITTI dataset
 
 ![Result on 00](assets/KITTI_VO_00.gif)
 
@@ -26,19 +26,19 @@ The `params.yaml` needs to be edited to configure the sequence to run the simula
 ## **About the Problem !**
 
 **1. What is Visual Odometry ?** <br>
-**2. Formulation of the Problem**  <br>
+**2. Problem Formulation**  <br>
 **3. Algorith Implemented** <br>
 
 ### **Visual Odometry**
 
-Visual Odometry is the process of incrementally estimating the pose and trajectory of a robot or a vehicle (orientation and translation of a camera configuration rigidly attached to it) using video stream coming from the camera.
+Visual Odometry is the process of incrementally estimating the pose and trajectory of a robot or a vehicle (orientation and translation of a camera configuration rigidly attached to it) using video stream from the camera.
 
 ### **Problem Formulation**
 
 An agent is moving through an environment and taking
 images with a rigidly attached camera system at discrete
 time instants. Let the stream of images coming from the pair of camera
-(assumed stere system) be denoted by I<sub>L, k</sub> andI<sub>R, k</sub> at time instant *k* . We assume that we have prior knowledge of all the intrinsic as well as extrinsic calibration parameters of the stereo rig. 
+(assumed stereo configuration) be denoted by I<sub>L, k</sub> and I<sub>R, k</sub> at time instant *k* . We assume that we have prior knowledge of all the intrinsic as well as extrinsic calibration parameters of the stereo rig. 
 
 We need to estimate the relative rotation *R* and translation *t* between stereo configuration at time instants *k-1* and *k* and then to concatenate the transformation to incrementally recover the full trajectory C<sub>k</sub> of the camera
 
@@ -49,7 +49,7 @@ We need to estimate the relative rotation *R* and translation *t* between stereo
 - &nbsp;Triangulate features to build point cloud X<sub>k</sub> <br>
 - &nbsp;Set initial camera pose C<sub>k</sub> <br>
 - &nbsp;Store information from the first frame as I<sub>L,k-1</sub>, I<sub>R,k-1</sub>, f<sub>L,k-1</sub>, f<sub>R,k-1</sub>, X<sub>k-1</sub> <br>
-&nbsp;While Exists a new image frame <br>
+&nbsp;While exists a new image frame: <br>
     - Compute the new stereo image pair I<sub>L,K</sub> and <sub>R,K</sub> <br>
     - Extract and match stereo features f<sub>L,K</sub> and f<sub>R,K</sub> <br>
     - Triangulate features to build point cloud X<sub>k</sub> <br>
@@ -62,13 +62,13 @@ We need to estimate the relative rotation *R* and translation *t* between stereo
 <br>
 <p align="center"> 
 <img src="assets/SVO_Diagram.png" width="400" height="300" />  <br>
-<p align="center" style="font-size:50%;"> <em> Relative Camera Pose and Concatenation of Transformations (Source: E. F. Aguilar Calzadillas [1] </em>) </p>
+<p align="center" style="font-size:30%;"> <em> Relative Camera Pose and Concatenation of Transformations (Source: E. F. Aguilar Calzadillas [1] </em>) </p>
 </p>
 
 ## Future Work
 - [ ] Implement Windowed Bundle Adjustment
 - [ ] Implement Graph Based Optimisation in Visual SLAM
-- [ ] Reconstruct 3D map of scene point and visualise in Point Cloud Library (PCL)
+- [ ] Visualise 3D point cloud of scene using Point Cloud Library (PCL)
 
 ## **References**
 
