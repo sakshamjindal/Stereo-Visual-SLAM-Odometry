@@ -18,7 +18,7 @@ $ pip install -e .
 For simulation of visual odometry, run the followig command
 
 ```bash
-# python main.py --config_path configs/params.yaml
+$ python main.py --config_path configs/params.yaml
 ```
 
 The `params.yaml` needs to be edited to configure the sequence to run the simulation.
