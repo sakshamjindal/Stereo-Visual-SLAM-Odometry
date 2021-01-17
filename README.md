@@ -2,7 +2,7 @@
 
 ## **About**
 
-This proect implements Stereo Visual Odometry using motion from 3D structure and Image correspondences
+This project implements Stereo Visual Odometry using motion from 3D structure and Image correspondences to recover 6-DOF camera pose (with local non-linear least square optimisation) using a calibrated stereo pair and estimate trajectory of the camera for various scenarios in KITTI dataset
 
 ![Result on 00](assets/KITTI_VO_00.gif)
 
@@ -43,8 +43,7 @@ time instants. Let the stream of images coming from the pair of camera
 We need to estimate the relative rotation *R* and translation *t* between stereo configuration at time instants *k-1* and *k* and then to concatenate the transformation to incrementally recover the full trajectory C<sub>k</sub> of the camera
 
 ### **Algorithm Implemented**
----
-Algorithm: 3D-to-2D: Structure to feature correspondences (Source : [1]) <br> 
+3D-to-2D: Structure to feature correspondences (Source : [1]) <br>
 - &nbsp;Compute the first stereo image frames I<sub>L,K</sub> and I<sub>R,K</sub> <br>
 - &nbsp;Extract and match stereo features f<sub>L,K</sub> and f<sub>R,K</sub> <br>
 - &nbsp;Triangulate features to build point cloud X<sub>k</sub> <br>
@@ -60,15 +59,18 @@ While Exists a new image frame <br>
     - Concatenate transformation by C<sub>k</sub> = C<sub>k-1</sub> T<sub>k</sub>
     - If Optimisation is enabled, do non-linear least squares optimisation of T 
     - Store informaton from first frame as I<sub>L,k-1</sub>, I<sub>R,k-1</sub>, f<sub>L,k-1</sub>, f<sub>R,k-1</sub>, X<sub>k-1</sub> and C<sub>k-1</sub> <br>
-
-------------
 <br>
 <p align="center"> 
 <img src="assets/SVO_Diagram.png" width="400" height="300" />  <br>
-<p align="center" style="font-size:70%;"> <em> Relative Camera Pose and Concatenation of Transformations (Source: E. F. Aguilar Calzadillas [1] </em>) </p>
+<p align="center" style="font-size:50%;"> <em> Relative Camera Pose and Concatenation of Transformations (Source: E. F. Aguilar Calzadillas [1] </em>) </p>
 </p>
 
-### **References**
+## Future Work
+- [ ] Implement Windowed Bundle Adjustment
+- [ ] Implement Graph Based Optimisation in Visual SLAM
+- [ ] Reconstruct 3D map of scene point and visualise in Point Cloud Library (PCL)
+
+## **References**
 
 [1]  ****E. F. Aguilar Calzadillas****, **"Sparse Stereo Visual Odometry with Local Non-Linear Least-Squares Optimization for Navigation of Autonomous Vehicles"**,  M. A. Sc. Thesis, Department of Mechanical and Aerospace Engineering, Carleton University, Ottawa ON, Canada, 2019
 <br />
@@ -79,3 +81,6 @@ While Exists a new image frame <br>
 [3]  **F. Fraundorfer, D. Scaramuzza**, *"Visual odometry: Part II - Matching, robustness, optimization, and applications"*, IEEE Robotics and Automation Magazine, Volume 19, issue 2, 2012
 
 [4] **Avi Singh**, *Visual Odmetry from scratch - A tutorial for beginners*, Avi Singh's Blog
+
+## Contact
+Saksham Jindal (saksham.jindal@outlook.com)
