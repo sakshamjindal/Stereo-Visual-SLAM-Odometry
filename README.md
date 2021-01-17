@@ -49,7 +49,7 @@ We need to estimate the relative rotation *R* and translation *t* between stereo
 - &nbsp;Triangulate features to build point cloud X<sub>k</sub> <br>
 - &nbsp;Set initial camera pose C<sub>k</sub> <br>
 - &nbsp;Store information from the first frame as I<sub>L,k-1</sub>, I<sub>R,k-1</sub>, f<sub>L,k-1</sub>, f<sub>R,k-1</sub>, X<sub>k-1</sub> <br>
-While Exists a new image frame <br>
+&nbsp;While Exists a new image frame <br>
     - Compute the new stereo image pair I<sub>L,K</sub> and <sub>R,K</sub> <br>
     - Extract and match stereo features f<sub>L,K</sub> and f<sub>R,K</sub> <br>
     - Triangulate features to build point cloud X<sub>k</sub> <br>
