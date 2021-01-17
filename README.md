@@ -38,12 +38,13 @@ Visual Odometry is the process of incrementally estimating the pose and trajecto
 An agent is moving through an environment and taking
 images with a rigidly attached camera system at discrete
 time instants. Let the stream of images coming from the pair of camera
-(assumed stere system) be denoted by I<sub>L, 0:n</sub> = {I<sub>L, 0</sub>,......, I<sub>L, n</sub>} and I<sub>R, 0:n</sub> = {I<sub>R, 0</sub>,......, I<sub>R, n</sub>}. We have prior knowledge of all the intrinsic as well as extrinsic calibration parameters of the stereo rig 
+(assumed stere system) be denoted by I<sub>L, k</sub> andI<sub>R, k</sub> at time instant *k* . We assume that we have prior knowledge of all the intrinsic as well as extrinsic calibration parameters of the stereo rig. 
 
-We need to estimate the relative rotation *R* and translation *t* between stereo configuration at time instants *k* and *k+1* and then to concatenate the transformation to incrementally recover the full trajectory C<sub>0:n</sub> of the camera
+We need to estimate the relative rotation *R* and translation *t* between stereo configuration at time instants *k-1* and *k* and then to concatenate the transformation to incrementally recover the full trajectory C<sub>k</sub> of the camera
 
 ### **Algorithm Implemented**
-Algorithm<sup>[1]</sup> : 3D-to-2D: Structure to feature correspondences** <br>
+---
+Algorithm: 3D-to-2D: Structure to feature correspondences (Source : [1]) <br> 
 - &nbsp;Compute the first stereo image frames I<sub>L,K</sub> and I<sub>R,K</sub> <br>
 - &nbsp;Extract and match stereo features f<sub>L,K</sub> and f<sub>R,K</sub> <br>
 - &nbsp;Triangulate features to build point cloud X<sub>k</sub> <br>
@@ -60,11 +61,12 @@ While Exists a new image frame <br>
     - If Optimisation is enabled, do non-linear least squares optimisation of T 
     - Store informaton from first frame as I<sub>L,k-1</sub>, I<sub>R,k-1</sub>, f<sub>L,k-1</sub>, f<sub>R,k-1</sub>, X<sub>k-1</sub> and C<sub>k-1</sub> <br>
 
+------------
+<br>
 <p align="center"> 
 <img src="assets/SVO_Diagram.png" width="400" height="300" />  <br>
 <p align="center" style="font-size:70%;"> <em> Relative Camera Pose and Concatenation of Transformations (Source: E. F. Aguilar Calzadillas [1] </em>) </p>
 </p>
-
 
 ### **References**
 
