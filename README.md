@@ -4,7 +4,7 @@
 
 This proect implements Stereo Visual Odometry using motion from 3D structure and Image correspondences
 
-![Result on 00](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f12c500f-4a0b-4fe5-b5a6-4f51741c38ff/KITT_VO_00.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210117%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210117T223613Z&X-Amz-Expires=86400&X-Amz-Signature=ce065138fcf9c3ba2017dcaf1a1e9bd63c81f2ad2481d1668a9dfd266cd9ca5d&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22KITT_VO_00.gif%22)
+![Result on 00](assets/KITTI_VO_00.gif)
 
 ## **Installation**
 
@@ -61,7 +61,7 @@ While Exists a new image frame <br>
     - Store informaton from first frame as I<sub>L,k-1</sub>, I<sub>R,k-1</sub>, f<sub>L,k-1</sub>, f<sub>R,k-1</sub>, X<sub>k-1</sub> and C<sub>k-1</sub> <br>
 
 <p align="center"> 
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9af3a309-7fb5-4826-ab00-a035b9478d91/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210116%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210116T202235Z&X-Amz-Expires=86400&X-Amz-Signature=16cee78b2060f593b4ef30179fdcd62662ba99ee8fb9a72dfeb75aade2d8d849&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22" width="400" height="300" />  <br>
+<img src="assets/SVO_Diagram.png" width="400" height="300" />  <br>
 <p align="center" style="font-size:70%;"> <em> Relative Camera Pose and Concatenation of Transformations (Source: E. F. Aguilar Calzadillas [1] </em>) </p>
 </p>
 
