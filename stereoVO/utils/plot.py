@@ -16,6 +16,10 @@ class SVO_Plot():
         fig3 = plt.figure(figsize=figSize)
         self.ax3 = fig3.add_subplot(111)
 
+        fig1.canvas.set_window_title('Schematic Representation of Camera in 3D')
+        fig2.canvas.set_window_title('Trajectory of Camera in 3D')
+        fig3.canvas.set_window_title('Location RMSE with respect to frame number')
+
         self.initialize_axes()
 
         # Initialise an empty drawing board for trajectory
@@ -71,8 +75,8 @@ class SVO_Plot():
         X = round(t_vec[0], 2)
         Y = round(t_vec[1], 2)
         Z = round(t_vec[2], 2)
-        ax1.title.set_text('X = {}, Y = {}, Z = {}'.format(X, Y, Z))
-        ax2.title.set_text('X = {}, Y = {}, Z = {}'.format(X, Y, Z))
+        ax1.title.set_text('X = {} m, Y = {} m, Z = {} m'.format(X, Y, Z))
+        ax2.title.set_text('X = {} m, Y = {} m, Z = {} m'.format(X, Y, Z))
         
         axes = np.zeros((3,6))
         axes[0,1], axes[1,3],axes[2,5] = 2,2,2
@@ -116,7 +120,7 @@ class SVO_Plot():
         cv2.rectangle(traj, (10, 20), (600, 60), (0,0,0), -1)
         text = "Coordinates: x=%2fm y=%2fm z=%2fm"%(x,y,z)
         cv2.putText(traj, text, (20,40), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1, 8)
-        cv2.imshow('Trajectory', traj)
+        cv2.imshow("Trajectory of Camera - Bird's eye view", traj)
 
     def draw_rmse_error(self, index, rmse, ax):
 

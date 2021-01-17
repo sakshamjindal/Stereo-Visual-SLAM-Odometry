@@ -1,3 +1,4 @@
+import cv2
 import argparse
 import matplotlib.pyplot as plt
 
@@ -52,6 +53,11 @@ def main():
 
         # Clear plot and prepare for next iterations
         Plotter.clear()
+
+        if index==0:
+            cv2.waitKey(0)
+        else:
+            cv2.waitKey(1)
 
     plt.show()
 
