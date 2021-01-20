@@ -133,6 +133,7 @@ notebooks/.gitattributes
 
 #ipynb files
 */*.ipynb
+notebooks/*.ipynb
 
 #resources
 */*.pdf
