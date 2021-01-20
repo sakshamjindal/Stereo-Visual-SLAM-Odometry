@@ -130,3 +130,9 @@ dmypy.json
 .vscode/settings.json
 notebooks/.gitattributes
 .gitconfig
+
+#ipynb files
+notebooks/*
+
+#resources
+*/*.pdf
