@@ -132,7 +132,7 @@ notebooks/.gitattributes
 .gitconfig
 
 #ipynb files
-notebooks/*
+*/*.ipynb
 
 #resources
 */*.pdf
