@@ -2,7 +2,7 @@
 
 ## **About**
 
-This project implements 6-DOF camera pose estimation from a calibrate stereo camera (with local non-linear least square optimisation) for various scenarios in KITTI dataset
+This project implements 6-DOF camera pose estimation from a calibrated stereo camera (with local non-linear least square optimisation) for various scenarios in KITTI dataset
 
 ![Result on 00](assets/KITTI_VO_00_cut.gif)
 
