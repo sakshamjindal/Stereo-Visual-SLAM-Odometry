@@ -2,9 +2,9 @@
 
 ## **About**
 
-This project implements Stereo Visual Odometry using motion from 3D structure and image correspondences to recover 6-DOF camera pose (with local non-linear least square optimisation) using a calibrated stereo pair and estimate trajectory of the camera for various scenarios in KITTI dataset
+This project implements 6-DOF camera pose estimation from a calibrate stereo camera (with local non-linear least square optimisation) for various scenarios in KITTI dataset
 
-![Result on 00](assets/KITTI_VO_00.gif)
+![Result on 00](assets/KITTI_VO_00_cut.gif)
 
 ## **Installation**
 
