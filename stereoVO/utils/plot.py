@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt 
+
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 class SVO_Plot():
@@ -16,9 +17,10 @@ class SVO_Plot():
         fig3 = plt.figure(figsize=figSize)
         self.ax3 = fig3.add_subplot(111)
 
-        fig1.canvas.set_window_title('Schematic Representation of Camera in 3D')
-        fig2.canvas.set_window_title('Trajectory of Camera in 3D')
-        fig3.canvas.set_window_title('Location RMSE with respect to frame number')
+
+        fig1.suptitle('Schematic Representation of Camera in 3D')
+        fig2.suptitle('Trajectory of Camera in 3D')
+        fig3.suptitle('Location RMSE with respect to frame number')
 
         self.initialize_axes()
 
