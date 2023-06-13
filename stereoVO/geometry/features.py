@@ -39,7 +39,7 @@ class DetectionEngine():
         """
     
         if self.params.geometry.detection.method == "SIFT":
-            detector = cv2.xfeatures2d.SIFT_create()
+            detector = cv2.SIFT_create()
         else:
             raise NotImplementedError("Feature Detector has not been implemented. Please refer to the Contributing guide and raise a PR")
 

@@ -49,7 +49,7 @@ class KittiDataset():
         self.right_images_path = str(self.path.joinpath('image_1'))
         self.sequence_count = str(self.path.name)
         self.calibfile = str(self.path.joinpath('calib.txt'))
-        self.gt_path = str(self.path.parents[3].joinpath('data_odometry_poses', 'dataset', 'poses', self.sequence_count + '.txt'))
+        self.gt_path = str(self.path.parents[2].joinpath('dataset', 'poses', self.sequence_count + '.txt'))
 
         self.ground_truth = self.load_ground_truth_pose(self.gt_path)
         self.left_image_paths = self.load_image_paths(self.left_images_path)

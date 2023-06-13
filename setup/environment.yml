@@ -60,7 +60,7 @@ dependencies:
   - libclang=9.0.1=default_hde54327_0
   - libffi=3.2.1=he1b5a44_1007
   - libgcc-ng=9.2.0=h24d8f2e_2
-  - libgfortran-ng=7.5.0=hdf63c60_6
+  - libgfortran-ng=7.5.0
   - libiconv=1.15=h516909a_1006
   - liblapack=3.8.0=16_openblas
   - liblapacke=3.8.0=16_openblas
@@ -121,7 +121,7 @@ dependencies:
   - python=3.8.3=cpython_he5300dc_0
   - python-dateutil=2.8.1=py_0
   - python_abi=3.8=1_cp38
-  - pytorch=1.4.0=py3.8_cpu_0
+  - pytorch=1.4.0
   - pyzmq=19.0.1=py38he6710b0_1
   - qt=5.12.5=hd8c4c69_1
   - readline=8.0=hf8c457e_0
@@ -132,7 +132,7 @@ dependencies:
   - terminado=0.9.1=py38h32f6830_1
   - testpath=0.4.4=py_0
   - tk=8.6.10=hed695b0_0
-  - torchvision=0.5.0=py38_cpu
+  - torchvision
   - tornado=6.0.4=py38h7b6447c_1
   - traitlets=4.3.3=py38_0
   - wcwidth=0.2.5=py_0
